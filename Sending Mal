@@ -1,0 +1,195 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Net.Mail;
+using System.Text;
+using System.Net.Mime;
+using System.IO;
+
+
+public class SendMail
+{
+    #region[Declaration]
+    /// <summary>
+    /// Declaration goes here
+    /// </summary>
+    string address;
+    #endregion
+
+    #region[Send Activation to the users]
+    /// <summary>
+    /// Fuction to send Activation mail to the users
+    /// </summary>
+    /// <param name="activationstatus"></param>
+    /// <param name="filename"></param>
+    /// <param name="FirstName"></param>
+    /// <param name="UserName"></param>
+    /// <param name="Mailaddress"></param>
+    public void SendActivationMail(string activationstatus, string filename,string FirstName,string UserName,string Mailaddress)
+	{
+       
+        address = "http://localhost:50117/Login.aspx";
+        string mailbody = System.IO.File.ReadAllText(filename);
+        mailbody = mailbody.Replace("##NAME##", FirstName);
+        mailbody = mailbody.Replace("##Username##", UserName);
+        mailbody = mailbody.Replace("##Address##", address);
+        string to = Mailaddress;
+        string from = "dinesht@techaffinity.com";
+        MailMessage message = new MailMessage(from, to);
+        if (activationstatus == "Active")
+        {
+            message.Subject = "Account Activation";
+            Attachment imgAtt = new Attachment(HttpContext.Current.Server.MapPath("~/ImageUploads/aaa-big-tick.jpg"));
+            imgAtt.ContentId = "aaa-big-tick.jpg";
+            message.Attachments.Add(imgAtt);
+        }
+        if (activationstatus == "InActive")
+        {
+            message.Subject = "Account De-Activation";
+            Attachment ImageAtt = new Attachment(HttpContext.Current.Server.MapPath("~/ImageUploads/activation.jpg"));
+            ImageAtt.ContentId = "activation.jpg";
+            message.Attachments.Add(ImageAtt);
+        }
+        message.Body = mailbody;
+        message.BodyEncoding = Encoding.UTF8;
+        message.IsBodyHtml = true;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+        System.Net.NetworkCredential basicCredential = new System.Net.NetworkCredential("dinesht@techaffinity.com", "goldenstar90");
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = true;
+        client.Credentials = basicCredential;
+        try
+        {
+            client.Send(message);
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+
+    #endregion
+
+    #region[Sending Registration Mail]
+    /// <summary>
+    /// This code user to Email Sending Server.MapPath "Event.html" mailbody.Replace using html email templates
+    /// </summary>
+
+    public void SendRegistrationMail(string FileName,string FirstName,string UserName,string Password,string EmailID )
+    {
+        
+        Attachment imgAtt = new Attachment(HttpContext.Current.Server.MapPath("~/ImageUploads/Welcome_large.jpg"));
+        imgAtt.ContentId = "Welcome_large.jpg";    
+        string address = "http://localhost:50117/Login.aspx";
+        string mailbody = System.IO.File.ReadAllText(FileName);
+        mailbody = mailbody.Replace("##NAME##", FirstName);
+        mailbody = mailbody.Replace("##Username##", UserName);
+        mailbody = mailbody.Replace("##Password##", Password);
+        mailbody = mailbody.Replace("##Address##", address);      
+        string to = EmailID;
+        string from = "dinesht@techaffinity.com";
+        MailMessage message = new MailMessage(from, to);
+        message.Subject = "Account Registration";
+        message.Body = mailbody;
+        message.Attachments.Add(imgAtt);
+        message.BodyEncoding = Encoding.UTF8;
+        message.IsBodyHtml = true;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+        System.Net.NetworkCredential basicCredential = new System.Net.NetworkCredential("dinesht@techaffinity.com", "goldenstar90");
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = true;
+        client.Credentials = basicCredential;
+        try
+        {
+            client.Send(message);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    #endregion
+
+    #region[Sending Change Password mail to the user]
+    /// <summary>
+    /// This code user to Email Sending Server.MapPath "Event.html" mailbody.Replace using html email templates
+    /// </summary>
+
+    public void ChangingPassword(string FilePath,string FirstName,string NewPassword,string EmailID)
+    {
+        Attachment imgAtt = new Attachment(HttpContext.Current.Server.MapPath("~/ImageUploads/reset-windows-password.png"));
+        imgAtt.ContentId = "reset-windows-password.png";  
+        string mailbody = System.IO.File.ReadAllText(FilePath);
+        mailbody = mailbody.Replace("##NAME##", FirstName);
+        mailbody = mailbody.Replace("##NewPassword##", NewPassword);
+        string to = EmailID;
+        string from = "dinesht@techaffinity.com";
+        MailMessage message = new MailMessage(from, to);
+        message.Subject = "Password Changed";
+        message.Body = mailbody;
+        message.Attachments.Add(imgAtt);
+        message.BodyEncoding = Encoding.UTF8;
+        message.IsBodyHtml = true;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+        System.Net.NetworkCredential basicCredential = new System.Net.NetworkCredential("dinesht@techaffinity.com", "goldenstar90");
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = true;
+        client.Credentials = basicCredential;
+        try
+        {
+            client.Send(message);
+        
+          
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+
+        }
+    }
+       
+#endregion
+
+    #region[Sending Recover Password mail to the user]
+    /// <summary>
+    /// This code user to Email Sending Server.MapPath "Event.html" mailbody.Replace using html email templates
+    /// </summary>
+    public void ForgotPassword(string FilePath,string FirstName,string UserName,string password,string EmailID)
+    {
+        Attachment imgAtt = new Attachment(HttpContext.Current.Server.MapPath("~/ImageUploads/forgot_pass.jpg"));
+        imgAtt.ContentId = "forgot_pass.jpg";  
+        string address = "http://localhost:50117/Forgot_Password.aspx";
+        string mailbody = System.IO.File.ReadAllText(FilePath);
+        mailbody = mailbody.Replace("##NAME##", FirstName);
+        mailbody = mailbody.Replace("##Username##", UserName);
+        mailbody = mailbody.Replace("##Address##", address);
+        mailbody = mailbody.Replace("##Oldpassword##", password);
+        string to = EmailID;
+        string from = "dinesht@techaffinity.com";
+        MailMessage message = new MailMessage(from, to);
+        message.Subject = "Recover Password";
+        message.Body = mailbody;
+        message.Attachments.Add(imgAtt);
+        message.BodyEncoding = Encoding.UTF8;
+        message.IsBodyHtml = true;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+        System.Net.NetworkCredential basicCredential = new System.Net.NetworkCredential("dinesht@techaffinity.com", "goldenstar90");
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = true;
+        client.Credentials = basicCredential;
+        try
+        {
+            client.Send(message);
+          
+        }
+        catch(Exception ex)
+        {
+
+            throw ex;
+        }
+    }
+    #endregion
+}
