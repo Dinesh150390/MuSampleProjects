@@ -1,0 +1,147 @@
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+
+/// <summary>
+/// Summary description for GridInsertion
+/// </summary>
+public class GridInsertion
+{
+    #region[Declaration]
+    /// <summary>
+    /// Declaration of all objects Goes here
+    /// </summary>
+    string connectionString = ConfigurationManager.ConnectionStrings["cn_Website"].ConnectionString;
+    SqlCommand cmd;
+    SqlDataAdapter da;
+    DataTable dt;
+    DataSet ds;
+    SqlConnection con;
+    string vehicletype;
+    #endregion
+
+
+    #region[Fill the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public void FillGrid()
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("Select UserId,FirstName,Gender,Vehicletype,status from UserRegistraion", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        con.Close();
+    }
+    #endregion
+
+
+
+
+    #region[Fill the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public void dropdown()
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("Select UserId,Vehicletype from UserRegistraion", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        con.Close();
+    }
+    #endregion
+
+
+
+    #region[Fill the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public string dropdownType(int UserID)
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("Select Vehicletype from UserRegistraion where UserId='" + UserID + "' ", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        if (dt.Rows.Count > 0)
+        {
+            vehicletype = dt.Rows[0]["Vehicletype"].ToString();
+        }
+        con.Close();
+
+        return vehicletype;
+       
+    }
+    #endregion
+
+
+
+
+
+    #region[Insert the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public void insert(string FirstName, string Gender, string Vehicletype, string status)
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("Insert into UserRegistraion values('" + FirstName + "','" + Gender + "','" + Vehicletype + "','" + status + "')", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        con.Close();
+    }
+    #endregion
+
+
+
+
+
+    #region[Update the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public void Update(string FirstName,string Gender,string Vehicletype,string status,int UserID)
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("Update UserRegistraion set FirstName='" + FirstName + "',Gender ='" + Gender + "',Vehicletype='" + Vehicletype + "',status='" + status + "' where UserId='" + UserID + "'", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        con.Close();
+    }
+    #endregion
+
+
+
+
+
+    #region[Delete the Grid]
+    /// <summary>
+    /// Fucntion to fill the Grid with 
+    /// </summary>
+    public void delete(int UserID)
+    {
+        dt = new DataTable();
+        con = new SqlConnection(connectionString);
+        con.Open();
+        cmd = new SqlCommand("delete from UserRegistraion where UserId='" + UserID + "'", con);
+        da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+        con.Close();
+    }
+    #endregion
+}
